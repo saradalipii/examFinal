@@ -9,6 +9,15 @@
 </head>
 <body>
     <div class="row w-75 m-auto">
+        <div>
+                {% with messages = get_flashed_messages(category_filter=["signUpSuccessful"]) %}
+                    {% if messages %}
+                        {% for message in messages %}
+                            <h1 class="text-success text-center">{{message}}</h1>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+        </div>
         <div class="col-lg-6 col-md-6 col-sm-6">
             <h1>Register</h1>
            <form action="/register" method="post">
@@ -17,7 +26,7 @@
                     <input type="text" class="form-control" name="first_name">
                 </div>
                 <div>
-                    {% with messages = get_flashed_messages(category_filter=["firstname"]) %}
+                {% with messages = get_flashed_messages(category_filter=["firstname"]) %}
                     {% if messages %}
                         {% for message in messages %}
                             <p class="text-danger">{{message}}</p>

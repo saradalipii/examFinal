@@ -27,6 +27,8 @@ def loginPage():
 
 @app.route('/register', methods = ['POST'])
 def register():
+    if 'user_id' in session:
+        return redirect('/')
     if not User.validate_user(request.form):
         return redirect(request.referrer)
 
@@ -41,11 +43,14 @@ def register():
         'password': bcrypt.generate_password_hash(request.form['password'])
     }
     User.create_user(data)
-    return redirect('/')
+    flash('You created the user succesfully! You can now use it to log in! ', 'signUpSuccessful')
+    return redirect(request.referrer)
 
 
 @app.route('/login', methods=['POST'])
 def login():
+    if 'user_id' in session:
+        return redirect('/')
     if not User.get_user_by_email(request.form):
         flash('Please enter a correct email!', 'emailLogin')
         return redirect(request.referrer)
@@ -56,7 +61,6 @@ def login():
         # if we get False after checking the password
         flash("Invalid Password", 'passwordLogin')
         return redirect(request.referrer)
-
     session['user_id'] = user['id']
     return redirect('/')
     
@@ -68,5 +72,4 @@ def dashboard():
     data={
         'user_id': session['user_id']
     }
-
     return render_template('dashboard.html', loggedUser= User.get_user_by_id(data), recipes= Recipe.getAllRecipes())
