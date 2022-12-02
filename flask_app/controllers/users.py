@@ -72,7 +72,8 @@ def dashboard():
     data={
             'user_id': session['user_id']
         }
-    return render_template('dashboard.html', loggedUser= User.get_user_by_id(data), recipes= Recipe.getAllRecipes())
+
+    return render_template('dashboard.html', loggedUser= User.get_user_by_id(data), recipes= Recipe.getAllRecipes(), userLikedRecipe = User.get_logged_user_liked_posts(data))
 
 # def dashboard():
 #     if 'user_id' not in session:

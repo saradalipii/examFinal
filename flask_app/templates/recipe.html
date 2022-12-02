@@ -18,19 +18,24 @@
         </div>
     </nav>
     <div class="w-75 m-auto">
-        
         <h1>{{recipe.name}} on {{recipe.dateMade}}</h1>
         <div class="border border-1 p-3">
             <h4>What Happened:</h4>
             <p>{{recipe.description}}</p>
-            <p># of Sasquatches: {{recipe.likesNr}}</p>
-            <p>Reported by: {{recipe.user_id}}</p>
+            <p># of Sasquatches: {{recipe.under30}}</p>
+            <p>Reported by: {{recipe.first_name}}</p>
         </div>
         
         <div class="border border-1 p-3">
-            <p>Skeptics:</p>
-            <p>{{user}}</p>
-            <input type="button" value="Believe it">
+            {% if recipe.id not in userLikedRecipe %}
+            <a href="/sceptic/{{recipe.id}}">Sceptic</a>
+            {% endif %}
+            {% if recipe.id in userLikedRecipe %}
+            <a href="/unsceptic/{{recipe.id}}">UnSceptic</a>
+            {% endif %}            
+            {% for user in userLikedRecipe2  %}
+            <p>{{user.first_name}} {{user.last_name}}</p>
+            {% endfor %}
         </div>
     </div>
 

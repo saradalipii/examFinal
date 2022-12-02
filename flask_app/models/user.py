@@ -55,11 +55,20 @@ class User:
     
     @classmethod
     def get_logged_user_liked_posts(cls, data):
-        query = 'SELECT post_id as id FROM likes LEFT JOIN users on likes.user_id = users.id WHERE user_id = %(user_id)s;'
+        query = 'SELECT recipe_id as id FROM sceptics LEFT JOIN users on sceptics.user_id = users.id WHERE user_id = %(user_id)s;'
         results = connectToMySQL(cls.db_name).query_db(query, data)
         postsLiked = []
         for row in results:
             postsLiked.append(row['id'])
+        return postsLiked
+
+    @classmethod
+    def get_logged_user_liked_posts2(cls, data):
+        query = 'SELECT users.first_name as first_name, users.last_name as last_name FROM sceptics LEFT JOIN users on sceptics.user_id = users.id WHERE user_id = %(user_id)s;'
+        results = connectToMySQL(cls.db_name).query_db(query, data)
+        postsLiked = []
+        for row in results:
+            postsLiked.append(row)
         return postsLiked
 
     @staticmethod

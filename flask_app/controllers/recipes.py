@@ -37,7 +37,7 @@ def delete(id):
     if not session['user_id'] == currentRecipe['user_id']:
         flash('You cant delete this', 'noAccessError')
         return redirect('/dashboard')
-
+    Recipe.removeScepticsPost(data)
     Recipe.delete(data)
     return redirect(request.referrer)
 
@@ -50,7 +50,9 @@ def showOne(id):
         'recipe_id': id,
         'user_id': session['user_id']
     }
-    return render_template('recipe.html', loggedUser= User.get_user_by_id(data),recipe = Recipe.get_recipe_by_id(data))
+    
+    return render_template('recipe.html', loggedUser= User.get_user_by_id(data),recipe = Recipe.get_recipe_by_id(data),    userLikedRecipe2 = User.get_logged_user_liked_posts2(data), userLikedRecipe = User.get_logged_user_liked_posts(data)
+)
 
 @app.route('/edit/<int:id>')
 def editForm(id):
@@ -91,6 +93,9 @@ def addSceptic(id):
         'recipe_id' : id,
         'user_id' : session['user_id']
     }
+    userLikedRecipe = User.get_logged_user_liked_posts(data)
+    if 'recipe_id' in userLikedRecipe:
+        return redirect(request.referrer)
     Recipe.addSceptic(data)
     return redirect(request.referrer)
 
@@ -100,5 +105,6 @@ def removeSceptic(id):
         'recipe_id' : id,
         'user_id' : session['user_id']
     }
+    Recipe.addSceptic(data)
     Recipe.removeSceptic(data)
     return redirect(request.referrer)

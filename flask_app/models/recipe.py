@@ -26,7 +26,7 @@ class Recipe:
         return recipes
     @classmethod
     def get_recipe_by_id(cls, data):
-        query= 'SELECT * FROM recipes WHERE recipes.id = %(recipe_id)s;'
+        query= 'SELECT * FROM recipes LEFT JOIN users on recipes.user_id = users.id WHERE recipes.id = %(recipe_id)s;'
         results = connectToMySQL(cls.db_name).query_db(query, data)
         return results[0]
         
@@ -81,9 +81,12 @@ class Recipe:
 
     @classmethod
     def removeSceptic(cls, data):
-        query= 'DELETE FROM sceptics (recipe_id, user_id) VALUES ( %(recipe_id)s, %(user_id)s );'
+        query= 'DELETE FROM sceptics WHERE recipe_id= %(recipe_id)s and user_id = %(user_id)s;'
         return connectToMySQL(cls.db_name).query_db(query, data)
-
+    @classmethod
+    def removeScepticsPost(cls, data):
+        query= 'DELETE FROM sceptics WHERE recipe_id= %(recipe_id)s;'
+        return connectToMySQL(cls.db_name).query_db(query, data)
     @staticmethod
     def validate_recipe(recipe):
         is_valid = True

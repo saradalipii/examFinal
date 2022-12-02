@@ -39,14 +39,13 @@
                 <tr>
                     <td>{{recipe.likesNr}}</td>
                     
-                    
                     <td>{{recipe.name}}</td>       
                     <td>
                         <a href="/recipe/{{recipe.id}}">View</a>
                         {% if recipe.id not in userLikedRecipe %}
                         <a href="/sceptic/{{recipe.id}}">Sceptic</a>
                         {% endif %}
-                        {% if recipe.id not in userLikedRecipe %}
+                        {% if recipe.id in userLikedRecipe %}
                         <a href="/unsceptic/{{recipe.id}}">UnSceptic</a>
                         {% endif %}
                         {% if loggedUser.id == recipe.creator_id %}
