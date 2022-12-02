@@ -9,9 +9,10 @@
 </head>
 <body>
     <nav class="bg-dark d-flex justify-content-evenly my-auto">
-        <h1 class="text-white">Welcome {{loggedUser.first_name}}</h1>
+        <h1 class="text-white"> Sasquatch Websighting</h1>
         <div>
-            <a class="text-white btn btn-primary" href="/createRecipe">Create Recipe</a>
+            <h1 class="text-white"> {{loggedUser.first_name}} {{loggedUser.last_name}}</h1>
+            <a class="text-white btn btn-primary" href="/createRecipe">Report a sighting</a>
             <a class="text-white btn btn-danger" href="/logout">Logout</a>
         </div>
     </nav>
@@ -23,35 +24,43 @@
                 {% endfor %}
             {% endif %}
         {% endwith %}
-        </div>
-    <table class="table w-75 m-auto p-2 my-4">
+    </div>
+    <h1 class="text-black">Reported Sighting</h1>
+        <table class="table w-75 m-auto p-2 my-4">
         <thead>
-          <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Under 30</th>
-            <th scope="col">Actions</th>
-          </tr>
+        <tr>
+            <th scope="col">Skeptics</th>
+            <th scope="col">Location:</th>
+            <th scope="col">Actions: </th>
+        </tr>
         </thead>
         <tbody>
-            <!-- HERE I GET ALL THE RECIPES FROM MY DATABASES AND USE MY RECIPES VARIABLE, WHICH I GET FROM MY CONTROLLER ON THE DASHBOARD -->
             {% for recipe in recipes %}
                 <tr>
-                    <td>{{recipe.name}}</td>
-                    {% if recipe.under30 == 1 %}
-                    <td>Yes</td>
-                    {% else %}
-                    <td>No</td>
-                    {% endif %}
+                    <td>{{recipe.likesNr}}</td>
+                    
+                    
+                    <td>{{recipe.name}}</td>       
                     <td>
-                        <a href="/recipe/{{recipe.id}}">View Instructions</a>
-                        {% if loggedUser.id == recipe.user_id %}
-                        <a href="/edit/{{recipe.id}}">Edit Recipe</a>
-                        <a href="/delete/{{recipe.id}}">Delete Recipe</a>
+                        <a href="/recipe/{{recipe.id}}">View</a>
+                        {% if recipe.id not in userLikedRecipe %}
+                        <a href="/sceptic/{{recipe.id}}">Sceptic</a>
+                        {% endif %}
+                        {% if recipe.id not in userLikedRecipe %}
+                        <a href="/unsceptic/{{recipe.id}}">UnSceptic</a>
+                        {% endif %}
+                        {% if loggedUser.id == recipe.creator_id %}
+
+                        <a href="/edit/{{recipe.id}}">Edit</a>
+                        <a href="/delete/{{recipe.id}}">Delete</a>
                         {% endif %}
                     </td>
                 </tr>
             {% endfor %}
         </tbody>
-      </table>
+    </table>
+    <p>Reported by: {{recipes.user_id}}</p>  
 </body>
 </html>
+
+

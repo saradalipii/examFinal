@@ -15,7 +15,8 @@ class Recipe:
     
     @classmethod
     def getAllRecipes(cls):
-        query= 'SELECT * FROM recipes;'
+        query= 'SELECT recipes.id, name, COUNT(sceptics.id) as likesNr, users.id as creator_id, users.email as email FROM recipes LEFT JOIN users on recipes.user_id = users.id LEFT JOIN sceptics on sceptics.recipe_id = recipes.id GROUP BY recipes.id;'
+
         results =  connectToMySQL(cls.db_name).query_db(query)
         recipes= []
         if results:
@@ -55,13 +56,13 @@ class Recipe:
 
     @classmethod
     def update_recipe(cls,data):
-        query = 'UPDATE recipes SET name=%(name)s, description=%(description)s, instruction=%(instruction)s, dateMade=%(dateMade)s, under30=%(under30)s, user_id = %(user_id)s WHERE recipes.id = %(recipe_id)s;'
+        query = 'UPDATE recipes SET name=%(name)s, description=%(description)s, dateMade=%(dateMade)s, under30=%(under30)s, user_id = %(user_id)s WHERE recipes.id = %(recipe_id)s;'
         return connectToMySQL(cls.db_name).query_db(query, data)
 
     #Class Method to create a user
     @classmethod
     def create_recipe(cls,data):
-        query = 'INSERT INTO recipes (name, description, instruction, dateMade, under30, user_id) VALUES ( %(name)s, %(description)s, %(instruction)s, %(dateMade)s, %(under30)s, %(user_id)s);'
+        query = 'INSERT INTO recipes (name, description, dateMade, under30, user_id) VALUES (%(name)s,%(description)s,%(dateMade)s,%(under30)s,%(user_id)s);'
         return connectToMySQL(cls.db_name).query_db(query, data)
     
     @classmethod
@@ -73,6 +74,16 @@ class Recipe:
             postsLiked.append(row['id'])
         return postsLiked
 
+    @classmethod
+    def addSceptic(cls, data):
+        query= 'INSERT INTO sceptics (recipe_id, user_id) VALUES ( %(recipe_id)s, %(user_id)s );'
+        return connectToMySQL(cls.db_name).query_db(query, data)
+
+    @classmethod
+    def removeSceptic(cls, data):
+        query= 'DELETE FROM sceptics (recipe_id, user_id) VALUES ( %(recipe_id)s, %(user_id)s );'
+        return connectToMySQL(cls.db_name).query_db(query, data)
+
     @staticmethod
     def validate_recipe(recipe):
         is_valid = True
@@ -81,9 +92,6 @@ class Recipe:
             is_valid = False
         if len(recipe['description']) < 3:
             flash("Recipe description be at least 3 characters.", 'description')
-            is_valid = False
-        if len(recipe['instruction']) < 3:
-            flash("Recipe instruction must be at least 3 characters.", 'instruction')
             is_valid = False
         if recipe['dateMade'] == '':
             flash("Date made is required", 'dateMade')

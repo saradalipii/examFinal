@@ -70,6 +70,18 @@ def dashboard():
     if 'user_id' not in session:
         return redirect('/logout')
     data={
-        'user_id': session['user_id']
-    }
+            'user_id': session['user_id']
+        }
     return render_template('dashboard.html', loggedUser= User.get_user_by_id(data), recipes= Recipe.getAllRecipes())
+
+# def dashboard():
+#     if 'user_id' not in session:
+#         data={
+#             'user_id': session['user_id']
+#         }
+#         user = User.get_user_by_id(data)
+#         allRecipes = Recipe.getAllRecipes(data)
+#         userLikedRecipe = User.get_logged_user_liked_posts(data)
+#         return render_template('dashboard.html', loggedUser= user, allRecipes= allRecipes, userLikedRecipe = userLikedRecipe)
+#     return redirect('/logout')
+    

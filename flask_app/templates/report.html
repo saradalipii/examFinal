@@ -9,21 +9,22 @@
 </head>
 <body>
     <nav class="bg-dark d-flex justify-content-evenly my-auto">
-        <h1 class="text-white">Sasquatch Websighting</h1>
+        <h1 class="text-white">Welcome {{loggedUser.first_name}}</h1>
         <div>
-            <h1 class="text-white">{{loggedUser.first_name}} {{loggedUser.last_name}}</h1>
             <a class="text-white btn btn-primary" href="/">Dashboard</a>
             <a class="text-white btn btn-danger" href="/logout">Logout</a>
         </div>
     </nav>
-    <h1 class="text-center my-4">Report a Sighting</h1>
-    <form class="w-50 m-auto border border-1 p-5 bg-light" action="/create/recipe" method="post">
-    <div class="row">
+    <h1 class="text-center my-4">Create Recipe</h1>
+    <form class="w-50 m-auto border border-1 p-5 bg-light" action="/update/{{recipe.id}}" method="post">
         <input type="hidden" name="user_id" value="{{loggedUser.id}}">
+        <input type="hidden" name="recipe_id" value="{{recipe.id}}">
+
+        <div class="row">
         <div class="col-lg-6">
             <div class="form-group">
-                <label for="name"> Location</label>
-                <input type="name" class="form-control" name="name">
+                <label for="name"> Name</label>
+                <input type="name" value="{{recipe.name}}" class="form-control" name="name">
             </div>
             <div>
                 {% with messages = get_flashed_messages(category_filter=["name"]) %}
@@ -35,8 +36,8 @@
                 {% endwith %}
                 </div>
             <div class="form-group">
-                <label for="description"> What Happened:</label>
-                <textarea name="description" cols="30" rows="3"></textarea>
+                <label for="description"> Description</label>
+                <textarea name="description" cols="30" rows="3">{{recipe.description}}</textarea>
             </div>
             <div>
                 {% with messages = get_flashed_messages(category_filter=["description"]) %}
@@ -47,11 +48,24 @@
                     {% endif %}
                 {% endwith %}
                 </div>
+            <div class="form-group">
+                <label for="instruction"> Instruction</label>
+                <textarea name="instruction" cols="30" rows="3">{{recipe.instruction}}</textarea>
+            </div>
+            <div>
+                {% with messages = get_flashed_messages(category_filter=["instruction"]) %}
+                    {% if messages %}
+                        {% for message in messages %}
+                            <p class="text-danger">{{message}}</p>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                </div>
         </div>
         <div class="col-lg-6">
             <div class="form-group">
-                <label for="dateMade"> Date of Siting</label>
-                <input type="date" class="form-control" name="dateMade">
+                <label for="dateMade"> Date made on</label>
+                <input type="date" class="form-control" value="{{recipe.dateMade}}" name="dateMade">
             </div>
             <div>
                 {% with messages = get_flashed_messages(category_filter=["dateMade"]) %}
@@ -63,8 +77,18 @@
                 {% endwith %}
                 </div>
             <div class="form-group">
-                <p> # of Sasquatches:</p>
-                <input id="under30" type="number" name="under30">
+                <p> Under 30?</p>
+                {% if recipe.under30 == 1 %}
+                <label for="under30">Yes</label>
+                <input type="radio" checked id="1" name="under30" value="1">
+                <label for="under30">No</label>
+                <input type="radio" id="0" name="under30" value="0">
+                {% else %}
+                <label for="under30">Yes</label>
+                <input type="radio"  id="1" name="under30" value="1">
+                <label for="under30">No</label>
+                <input type="radio" checked id="0" name="under30" value="0">
+                {% endif %}
             </div>
             <div>
                 {% with messages = get_flashed_messages(category_filter=["under30"]) %}
@@ -76,9 +100,9 @@
                 {% endwith %}
                 </div>
         </div>
-        <input class="btn btn-success" type="submit" value="Report">
+        <input class="btn btn-success" type="submit" value="Update Recipe">
 
-    </div>
+       </div>
 
 
     </form>

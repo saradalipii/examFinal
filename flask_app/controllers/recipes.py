@@ -21,7 +21,6 @@ def createRecipe():
         return redirect('/logout')
     if not Recipe.validate_recipe(request.form):
         return redirect(request.referrer)
-   
     Recipe.create_recipe(request.form)
     return redirect('/')
 
@@ -67,7 +66,6 @@ def editForm(id):
     if not session['user_id'] == currentRecipe['user_id']:
         flash('You cant delete this', 'noAccessError')
         return redirect('/dashboard')
-   
     return render_template('updateRecipe.html', loggedUser= User.get_user_by_id(data), recipe = Recipe.get_recipe_by_id(data))
 
 @app.route('/update/<int:id>', methods = ['POST'])
@@ -86,3 +84,21 @@ def updateRecipe(id):
     Recipe.update_recipe(request.form)
 
     return redirect('/')
+
+@app.route('/sceptic/<int:id>')
+def addSceptic(id):
+    data = {
+        'recipe_id' : id,
+        'user_id' : session['user_id']
+    }
+    Recipe.addSceptic(data)
+    return redirect(request.referrer)
+
+@app.route('/unsceptic/<int:id>')
+def removeSceptic(id):
+    data = {
+        'recipe_id' : id,
+        'user_id' : session['user_id']
+    }
+    Recipe.removeSceptic(data)
+    return redirect(request.referrer)
