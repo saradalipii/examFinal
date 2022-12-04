@@ -70,20 +70,28 @@ def editForm(id):
         return redirect('/dashboard')
     return render_template('updateRecipe.html', loggedUser= User.get_user_by_id(data), recipe = Recipe.get_recipe_by_id(data))
 
-@app.route('/update/<int:id>', methods = ['POST'])
+@app.route('/update/recipe/<int:id>', methods = ['POST'])
 def updateRecipe(id):
     if 'user_id' not in session:
         return redirect('/logout')
     if not Recipe.validate_recipe(request.form):
         return redirect(request.referrer)
-    
-    currentRecipe = Recipe.get_recipe_by_id(request.form)
+    data = {
+        'recipe_id': id,
+        'user_id': session['user_id'],
+        'name' : request.form['name'],
+        'description' : request.form['description'],
+        'dateMade' : request.form['dateMade'],
+        'under30' : request.form['under30'],
+        }
+
+    currentRecipe = Recipe.get_recipe_by_id(data)
 
     if not session['user_id'] == currentRecipe['user_id']:
         flash('You cant delete this', 'noAccessError')
         return redirect('/dashboard')
     
-    Recipe.update_recipe(request.form)
+    Recipe.update_recipe(data)
 
     return redirect('/')
 

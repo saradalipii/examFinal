@@ -7,7 +7,6 @@ class Recipe:
         self.id = data['id'],
         self.name = data['name'],
         self.description = data['description'],
-        self.instruction = data['instruction'],
         self.dateMade = data['dateMade'],
         self.under30 = data['under30'],
         self.created_at = data['created_at'],
@@ -15,7 +14,7 @@ class Recipe:
     
     @classmethod
     def getAllRecipes(cls):
-        query= 'SELECT recipes.id, name, COUNT(sceptics.id) as likesNr, users.id as creator_id, users.email as email FROM recipes LEFT JOIN users on recipes.user_id = users.id LEFT JOIN sceptics on sceptics.recipe_id = recipes.id GROUP BY recipes.id;'
+        query= 'SELECT recipes.id,recipes.dateMade as dateMade,recipes.under30 as network, name, COUNT(sceptics.id) as likesNr, users.id as creator_id, users.email as email FROM recipes LEFT JOIN users on recipes.user_id = users.id LEFT JOIN sceptics on sceptics.recipe_id = recipes.id GROUP BY recipes.id;'
 
         results =  connectToMySQL(cls.db_name).query_db(query)
         recipes= []
@@ -56,7 +55,7 @@ class Recipe:
 
     @classmethod
     def update_recipe(cls,data):
-        query = 'UPDATE recipes SET name=%(name)s, description=%(description)s, dateMade=%(dateMade)s, under30=%(under30)s, user_id = %(user_id)s WHERE recipes.id = %(recipe_id)s;'
+        query = 'UPDATE recipes SET name=%(name)s,description=%(description)s, dateMade=%(dateMade)s, under30=%(under30)s, user_id = %(user_id)s WHERE recipes.id = %(recipe_id)s;'
         return connectToMySQL(cls.db_name).query_db(query, data)
 
     #Class Method to create a user
@@ -91,10 +90,13 @@ class Recipe:
     def validate_recipe(recipe):
         is_valid = True
         if len(recipe['name']) < 2:
-            flash("Name must be at least 3 characters.", 'name')
+            flash("Title must be at least 3 characters.", 'name')
             is_valid = False
+        if len(recipe['under30']) < 2:
+            flash("Network must be at least 3 characters.", 'under30')
+            is_valid = False    
         if len(recipe['description']) < 3:
-            flash("Recipe description be at least 3 characters.", 'description')
+            flash("Show description be at least 3 characters.", 'description')
             is_valid = False
         if recipe['dateMade'] == '':
             flash("Date made is required", 'dateMade')

@@ -9,20 +9,19 @@
 </head>
 <body>
     <nav class="bg-dark d-flex justify-content-evenly my-auto">
-        <h1 class="text-white">Sasquatch Websighting</h1>
         <div>
             <h1 class="text-white">{{loggedUser.first_name}} {{loggedUser.last_name}}</h1>
             <a class="text-white btn btn-primary" href="/">Dashboard</a>
             <a class="text-white btn btn-danger" href="/logout">Logout</a>
         </div>
     </nav>
-    <h1 class="text-center my-4">Report a Sighting</h1>
+    <h1 class="text-center my-4">Add a New Show!</h1>
     <form class="w-50 m-auto border border-1 p-5 bg-light" action="/create/recipe" method="post">
     <div class="row">
         <input type="hidden" name="user_id" value="{{loggedUser.id}}">
         <div class="col-lg-6">
             <div class="form-group">
-                <label for="name"> Location</label>
+                <label for="name"> Title</label>
                 <input type="name" class="form-control" name="name">
             </div>
             <div>
@@ -35,22 +34,21 @@
                 {% endwith %}
                 </div>
             <div class="form-group">
-                <label for="description"> What Happened:</label>
-                <textarea name="description" cols="30" rows="3"></textarea>
-            </div>
-            <div>
-                {% with messages = get_flashed_messages(category_filter=["description"]) %}
-                    {% if messages %}
-                        {% for message in messages %}
-                            <p class="text-danger">{{message}}</p>
-                        {% endfor %}
-                    {% endif %}
-                {% endwith %}
+                <div class="form-group">
+                    <p>Network:</p>
+                    <input id="under30" type="name" name="under30">
                 </div>
-        </div>
-        <div class="col-lg-6">
+                <div>
+                    {% with messages = get_flashed_messages(category_filter=["under30"]) %}
+                        {% if messages %}
+                            {% for message in messages %}
+                                <p class="text-danger">{{message}}</p>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+                </div>
             <div class="form-group">
-                <label for="dateMade"> Date of Siting</label>
+                <label for="dateMade"> Released Date</label>
                 <input type="date" class="form-control" name="dateMade">
             </div>
             <div>
@@ -61,22 +59,22 @@
                         {% endfor %}
                     {% endif %}
                 {% endwith %}
-                </div>
-            <div class="form-group">
-                <p> # of Sasquatches:</p>
-                <input id="under30" type="number" name="under30">
+            </div>
+            <label for="description">Description:</label>
+            <textarea name="description" cols="30" rows="3"></textarea>
             </div>
             <div>
-                {% with messages = get_flashed_messages(category_filter=["under30"]) %}
+                {% with messages = get_flashed_messages(category_filter=["description"]) %}
                     {% if messages %}
                         {% for message in messages %}
                             <p class="text-danger">{{message}}</p>
                         {% endfor %}
                     {% endif %}
                 {% endwith %}
-                </div>
+            </div>
+            
         </div>
-        <input class="btn btn-success" type="submit" value="Report">
+        <input class="btn btn-success" type="submit" value="Add">
 
     </div>
 
